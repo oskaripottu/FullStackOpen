@@ -2,22 +2,32 @@ sequenceDiagram
   participant browser
   participant server
 
-  browser ->>server: GET https://studies.cs.helsinki.fi/exampleapp/new_note
+  %% Käyttäjä lähettää lomakkeen
+  browser ->> server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
   activate server
-  server-->browser: Ei vastausdataa koska pyyntö uudelleenohjattu
+  server ->> browser: Ei vastausdataa koska pyyntö uudelleenohjattu
+  deactivate server
+
+  %% Selaimen uudelleenohjaus
+  browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+  activate server
+  server ->> browser: HTML document
   deactivate server
   
-  browser->>server: https://studies.cs.helsinki.fi/exampleapp/notes
+  %% Haetaan staattiset osat
+  browser ->> server: GET /exampleapp/main.css
   activate server
-  server-->browser: HTML document
+  server ->> browser: CSS styling
   deactivate server
   
-  browser->>server: https://studies.cs.helsinki.fi/exampleapp/main.css
+  %% Lisätään uusi note listaan ja haetaan data.json sivulle
+  browser ->> server: GET /exampleapp/main.js
   activate server
-  server-->browser: CSS styling
+  server ->> browser: JS file
   deactivate server
-  
-  browser->>server: https://studies.cs.helsinki.fi/exampleapp/main.js
+
+  %% Kaikki notet
+  browser ->> server: GET /exampleapp/data.json
   activate server
-  server-->browser: JS code
+  server ->> browser: JSON
   deactivate server
